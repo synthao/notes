@@ -1,0 +1,146 @@
+openapi: 3.0.3
+info:
+  title: Swagger Notes service - OpenAPI 3.0
+  description: Notes API
+  version: 1.0.11
+tags:
+  - name: note
+    description: Get notes by limit and offset
+paths:
+  /ping:
+    get:
+      tags:
+        - health
+      summary: Checks if the server is alive
+      operationId: ping
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+  /api/notes:
+    get:
+      tags:
+        - notes
+      summary: Get notes by linit and offes
+      operationId: getNotesList
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                items:
+                  properties:
+                    id:
+                      type: number
+                      example: 1
+                    name:
+                      type: string
+                      example: Note 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - notes
+      summary: Create a note
+      operationId: createNote
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: number
+                    example: 1
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/notes/{id}:
+    get:
+      tags:
+        - notes
+      summary: Get note by id
+      operationId: getNote
+      parameters:
+        - name: id
+          in: path
+          description: Note ID
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: number
+                    example: 1
+                  name:
+                    type: string
+                    example: Note 1
+                  text:
+                    type: string
+                    example: Some text of note 1
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: Something went wrong
+    delete:
+      tags:
+        - notes
+      summary: Delete note by id
+      operationId: deleteNote
+      parameters:
+        - name: id
+          in: path
+          description: Note ID
+          required: true
+          schema:
+            type: integer
+            format: int
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Not found
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: Something went wrong
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Something went wrong
